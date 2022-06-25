@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   adminer:
-    image: 141730029070.dkr.ecr.us-east-1.amazonaws.com/mylab:9a9c08d
+    image: adminer
     container_name: web
     restart: always
     ports:

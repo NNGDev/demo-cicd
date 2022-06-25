@@ -1,34 +1,18 @@
 version: 0.2
 phases:
-  install:
-    runtime-versions:
-      docker: 19
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR...
-      - aws --version
-      - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
-      - REPOSITORY_URI=141730029070.dkr.ecr.us-east-1.amazonaws.com/mylab
-      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - IMAGE_TAG=${COMMIT_HASH:=latest}
+      - echo "1. pre build step"
   build:
     commands:
-      - echo Build started on `date`
-      - echo Building the Docker image...
-      - docker build -t $REPOSITORY_URI:latest .
-      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+      - echo "2. Build step"
   post_build:
     commands:
-      - echo Build completed on `date`
-      - echo Pushing the Docker images...
-      - docker push $REPOSITORY_URI:latest
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - echo Writing image definitions file...
-      - printf '[{"name":"mylab","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - echo 3. "Post build"
+
 artifacts:
-    files: 
-      - imagedefinitions.json
-      - codedeploy/**/*
-      - appspec.yml
-      - docker-compose.yml
-      - .env
+  files:
+    - codedeploy/**/*
+    - appspec.yml
+    - docker-compose.yml
+    - .env
